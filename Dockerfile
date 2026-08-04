@@ -1,5 +1,6 @@
 # clean base image containing only comfyui, comfy-cli and comfyui-manager
 FROM runpod/worker-comfyui:5.8.4-base
+
 RUN comfy update all
 # install custom nodes into comfyui
 RUN git clone https://github.com/kijai/ComfyUI-KJNodes /comfyui/custom_nodes/ComfyUI-KJNodes && cd /comfyui/custom_nodes/ComfyUI-KJNodes && (git checkout c2a47f161bdcecc1e6baf3412f1d116febc26ce3 2>/dev/null || (git fetch origin c2a47f161bdcecc1e6baf3412f1d116febc26ce3 --depth=1 && git checkout c2a47f161bdcecc1e6baf3412f1d116febc26ce3) || echo "WARN: commit c2a47f161bdcecc1e6baf3412f1d116febc26ce3 unreachable in https://github.com/kijai/ComfyUI-KJNodes, falling back to default branch HEAD")
