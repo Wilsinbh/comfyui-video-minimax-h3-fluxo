@@ -20,3 +20,4 @@ RUN BACKOFFS="10 20 30 60 90" && for i in 1 2 3 4 5; do comfy model download --u
 
 # copy all input data (like images or videos) into comfyui (uncomment and adjust if needed)
 # COPY input/ /comfyui/input/
+
