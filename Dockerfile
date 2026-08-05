@@ -3,6 +3,17 @@ FROM runpod/worker-comfyui:5.8.4-base
 
 RUN comfy update all
 
+# a imagem base vem com torch+cu12x; sageattn3 e comfy_kitchen (nvfp4) exigem CUDA 13.
+# reinstala o torch com cu130, replicando o ambiente ja validado no pod (RTX Pro 6000)
+RUN pip install --no-cache-dir --force-reinstall \
+    torch==2.10.0 --index-url https://download.pytorch.org/whl/cu130
+
+# desativa a VRAM dinamica (comfy-aimdo) - com 97GB de VRAM disponivel na Pro 6000,
+# nao ha necessidade de streaming de pesos sob demanda, e isso estava adicionando
+# ~23s por step no sampling (deveria ser bem mais rapido com o modelo todo residente)
+RUN comfy set-default /comfyui --launch-extras="--disable-dynamic-vram"
+
+
 # install custom nodes into comfyui
 RUN git clone https://github.com/kijai/ComfyUI-KJNodes /comfyui/custom_nodes/ComfyUI-KJNodes && cd /comfyui/custom_nodes/ComfyUI-KJNodes && (git checkout c2a47f161bdcecc1e6baf3412f1d116febc26ce3 2>/dev/null || (git fetch origin c2a47f161bdcecc1e6baf3412f1d116febc26ce3 --depth=1 && git checkout c2a47f161bdcecc1e6baf3412f1d116febc26ce3) || echo "WARN: commit c2a47f161bdcecc1e6baf3412f1d116febc26ce3 unreachable in https://github.com/kijai/ComfyUI-KJNodes, falling back to default branch HEAD")
 
