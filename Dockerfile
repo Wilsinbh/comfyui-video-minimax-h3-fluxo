@@ -6,7 +6,7 @@ RUN comfy update all
 # a imagem base vem com torch+cu12x; sageattn3 e comfy_kitchen (nvfp4) exigem CUDA 13.
 # reinstala o torch com cu130, replicando o ambiente ja validado no pod (RTX Pro 6000)
 RUN pip install --no-cache-dir --force-reinstall \
-    torch==2.10.0 --index-url https://download.pytorch.org/whl/cu130
+    torch==2.10.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130
 
 # desativa a VRAM dinamica (comfy-aimdo) - com 97GB de VRAM disponivel na Pro 6000,
 # nao ha necessidade de streaming de pesos sob demanda, e isso estava adicionando
